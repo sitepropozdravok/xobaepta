@@ -1,0 +1,16 @@
+(() => {
+  const toggle=document.querySelector('#soundToggle'), icon=document.querySelector('#soundIcon'), label=document.querySelector('#soundLabel');let soundOn=false,ctx;
+  function audio(){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;ctx??=new C();if(ctx.state==='suspended')ctx.resume();return ctx}
+  function tone(freq,duration,type='sine',gain=.035,delay=0){if(!soundOn)return;const c=audio();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(freq,c.currentTime+delay);g.gain.setValueAtTime(.0001,c.currentTime+delay);g.gain.exponentialRampToValueAtTime(gain,c.currentTime+delay+.02);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+delay+duration);o.connect(g).connect(c.destination);o.start(c.currentTime+delay);o.stop(c.currentTime+delay+duration+.04)}
+  function chime(){tone(784,.55,'sine',.035);tone(1046,.7,'sine',.025,.12);tone(1318,.8,'sine',.018,.24)}
+  toggle.addEventListener('click',()=>{soundOn=!soundOn;toggle.setAttribute('aria-pressed',String(soundOn));icon.textContent=soundOn?'♫':'♪';label.textContent=soundOn?'Звук включён':'Звук выключен';if(soundOn){audio();chime()}});
+  document.querySelectorAll('.tarot-card').forEach(card=>card.addEventListener('click',()=>{const open=card.classList.toggle('is-flipped');card.setAttribute('aria-expanded',String(open));if(open){tone(440,.13,'triangle',.03);tone(660,.3,'sine',.02,.08)}}));
+  const layer=document.querySelector('#confettiLayer'),colors=['#e9c98a','#d85b77','#f5eadb','#9d2349','#f2a65a','#fff0cf'];
+  function confetti(amount=85){for(let n=0;n<amount;n++){const bit=document.createElement('i');bit.className='confetto';bit.style.left=`${Math.random()*100}%`;bit.style.background=colors[n%colors.length];bit.style.setProperty('--duration',`${2.1+Math.random()*2.5}s`);bit.style.setProperty('--drift',`${Math.random()*180-90}px`);bit.style.setProperty('--rotation',`${Math.random()*180}deg`);bit.style.animationDelay=`${Math.random()*.5}s`;layer.append(bit);bit.addEventListener('animationend',()=>bit.remove(),{once:true})}}
+  function celebrate(){confetti();chime()}
+  const candles=document.querySelector('#blowCandles');candles.addEventListener('click',()=>{document.querySelector('.birthday-art').classList.add('blown');document.querySelector('#wishMessage').textContent='Желание принято. Вселенная поставила напоминание ✨';candles.textContent='Желание загадано ✓';celebrate();setTimeout(()=>{document.querySelector('.birthday-art').classList.remove('blown');candles.innerHTML='Задуть свечи <span>✦</span>'},4200)});
+  document.querySelector('#confettiButton').addEventListener('click',celebrate);
+  document.querySelector('.button-gold').addEventListener('click',()=>{tone(523,.14,'triangle',.025);tone(659,.18,'triangle',.025,.1)});
+  const box=document.querySelector('#lightbox'),image=document.querySelector('#lightboxImage');document.querySelectorAll('.photo-tile').forEach(tile=>tile.addEventListener('click',()=>{image.src=tile.dataset.photo;box.showModal();tone(560,.13,'sine',.018)}));box.querySelector('.lightbox-close').addEventListener('click',()=>box.close());box.addEventListener('click',e=>{if(e.target===box)box.close()});
+})();
+
