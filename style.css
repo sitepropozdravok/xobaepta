@@ -94,3 +94,42 @@ body.motion-ready .tarot-card.card-ready{opacity:1;transform:translateY(0) scale
 @media(prefers-reduced-motion:reduce){
  .tarot-card .card-face{-webkit-transition:none!important;transition:none!important}
 }
+
+
+/* Reliable tarot flip: the card shell handles landing; only the inner stack flips */
+.tarot-card .tarot-inner{
+  position:absolute;
+  inset:0;
+  display:block;
+  -webkit-transform-style:preserve-3d;
+  transform-style:preserve-3d;
+  -webkit-transition:-webkit-transform .78s cubic-bezier(.2,.7,.1,1);
+  transition:transform .78s cubic-bezier(.2,.7,.1,1);
+}
+.tarot-card.is-flipped,
+.tarot-card.is-flipped.card-ready{
+  -webkit-transform:translateY(0) scale(1) rotateX(0)!important;
+  transform:translateY(0) scale(1) rotateX(0)!important;
+}
+.tarot-card.is-flipped.card-ready:hover{
+  -webkit-transform:translateY(-5px) scale(1)!important;
+  transform:translateY(-5px) scale(1)!important;
+}
+.tarot-card.is-flipped .tarot-inner{
+  -webkit-transform:rotateY(180deg);
+  transform:rotateY(180deg);
+}
+.tarot-card .tarot-inner .card-face{
+  position:absolute;
+  inset:0;
+  -webkit-backface-visibility:hidden!important;
+  backface-visibility:hidden!important;
+}
+.tarot-card .tarot-inner .card-back{
+  -webkit-transform:rotateY(0deg) translateZ(1px);
+  transform:rotateY(0deg) translateZ(1px);
+}
+.tarot-card .tarot-inner .card-front{
+  -webkit-transform:rotateY(180deg) translateZ(1px);
+  transform:rotateY(180deg) translateZ(1px);
+}
