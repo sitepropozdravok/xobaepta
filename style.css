@@ -60,3 +60,37 @@ body.motion-ready .tarot-card.card-ready{opacity:1;transform:translateY(0) scale
  body.motion-ready .reveal,body.motion-ready .tarot-card{opacity:1!important;transform:none!important;transition:none!important}
  .tarot-card.card-slam{animation:none!important}
 }
+/* Tarot flip rendering fix: explicit 3D faces, including iOS Safari/WebKit */
+.tarot-card{
+  -webkit-transform-style:preserve-3d;
+  transform-style:preserve-3d;
+  -webkit-perspective:1200px;
+  perspective:1200px;
+  -webkit-backface-visibility:visible;
+  backface-visibility:visible;
+}
+.tarot-card .card-face{
+  -webkit-backface-visibility:hidden!important;
+  backface-visibility:hidden!important;
+  -webkit-transform-style:preserve-3d;
+  transform-style:preserve-3d;
+  -webkit-transition:transform .8s cubic-bezier(.2,.7,.1,1);
+  transition:transform .8s cubic-bezier(.2,.7,.1,1);
+}
+.tarot-card .card-back{
+  -webkit-transform:rotateY(0deg) translateZ(1px);
+  transform:rotateY(0deg) translateZ(1px);
+}
+.tarot-card .card-front{
+  -webkit-transform:rotateY(180deg) translateZ(1px);
+  transform:rotateY(180deg) translateZ(1px);
+}
+.tarot-card.is-flipped,
+.tarot-card.is-flipped:hover,
+.tarot-card.is-flipped.card-ready{
+  -webkit-transform:rotateY(180deg)!important;
+  transform:rotateY(180deg)!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .tarot-card .card-face{-webkit-transition:none!important;transition:none!important}
+}
